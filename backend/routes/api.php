@@ -9,4 +9,10 @@ Route::post('/login', [AuthController::class, 'login']);
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('/me', [AuthController::class, 'me']);
     Route::post('/logout', [AuthController::class, 'logout']);
+
+    Route::get('/admin-test', function () {
+        return response()->json([
+            'message' => 'Welcome Admin!'
+        ]);
+    })->middleware('role:admin');
 });
