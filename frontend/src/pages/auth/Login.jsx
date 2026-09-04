@@ -47,6 +47,7 @@ export default function Login() {
             onChange={(event) => setEmail(event.target.value)}
             placeholder="Enter your email"
             required
+            disabled={loading}
           />
         </div>
 
@@ -60,6 +61,7 @@ export default function Login() {
             onChange={(event) => setPassword(event.target.value)}
             placeholder="Enter your password"
             required
+            disabled={loading}
           />
         </div>
 
