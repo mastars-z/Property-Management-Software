@@ -1,11 +1,11 @@
 import { Navigate, Outlet } from 'react-router-dom'
 import { useAuth } from '../auth/AuthContext'
 
-export default function PublicRoute() {
+function PublicRoute() {
   const { isAuthenticated, loading } = useAuth()
 
   if (loading) {
-    return <p>Loading...</p>
+    return <div>Loading...</div>
   }
 
   if (isAuthenticated) {
@@ -14,3 +14,5 @@ export default function PublicRoute() {
 
   return <Outlet />
 }
+
+export default PublicRoute

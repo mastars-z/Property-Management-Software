@@ -1,230 +1,207 @@
-import { useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
-import { useAuth } from '../../auth/AuthContext'
+import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { useAuth } from "../../auth/AuthContext";
 
-function Register() {
-  const navigate = useNavigate()
-  const { register } = useAuth()
+export default function Register() {
+  const { register } = useAuth();
+  const navigate = useNavigate();
 
-  const [form, setForm] = useState({
-    name: '',
-    email: '',
-    phone: '',
-    password: '',
-    password_confirmation: '',
-  })
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    password: "",
+    password_confirmation: "",
+  });
 
-  const [showPassword, setShowPassword] = useState(false)
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false)
-  const [error, setError] = useState('')
-  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
-  const handleChange = (event) => {
-    setForm({
-      ...form,
-      [event.target.name]: event.target.value,
-    })
-  }
+  const handleChange = (e) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value,
+    });
+  };
 
-  const handleSubmit = async (event) => {
-    event.preventDefault()
+  const handleSubmit = async (e) => {
+    e.preventDefault();
 
-    setError('')
-    setLoading(true)
+    setError("");
+
+    if (formData.password !== formData.password_confirmation) {
+      setError("Passwords do not match.");
+      return;
+    }
+
+    setLoading(true);
 
     try {
-      await register(
-        form.name,
-        form.email,
-        form.password,
-        form.password_confirmation
-      )
+      await register(formData);
 
-      navigate('/dashboard', { replace: true })
+      navigate("/tenant/dashboard");
     } catch (err) {
-      const firstError = err.errors
-        ? Object.values(err.errors)[0]?.[0]
-        : err.message
+      if (err.errors) {
+        const firstError = Object.values(err.errors)[0]?.[0];
 
-      setError(firstError || 'Registration failed.')
+        setError(firstError || "Registration failed.");
+      } else {
+        setError(err.message || "Registration failed.");
+      }
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
   return (
-    <div className="auth-page">
-      <div className="auth-background" />
+    <div className="min-h-screen bg-slate-100 flex items-center justify-center px-4 py-10">
+      <div className="w-full max-w-md">
 
-      <div className="auth-card register-card">
+        {/* Brand */}
+        <div className="text-center mb-8">
+          <h1 className="text-3xl font-bold text-indigo-600">
+            Property Management Software
+          </h1>
 
-        {/* Logo */}
-        <div className="brand">
-          <div className="brand-logo">
-            <span>⌂</span>
-          </div>
-
-          <div className="brand-name">
-            Property Management
-          </div>
-
-          <div className="brand-subtitle">
-            Software
-          </div>
+          <p className="mt-2 text-slate-500">
+            Create your tenant account to get started.
+          </p>
         </div>
 
-        {/* Heading */}
-        <div className="auth-heading">
-          <h1>Create Account</h1>
-          <p>Register to manage your properties with ease.</p>
-        </div>
+        {/* Register Card */}
+        <div className="bg-white rounded-2xl shadow-lg p-8">
 
-        {/* Error */}
-        {error && (
-          <div className="auth-error">
-            {error}
-          </div>
-        )}
+          <h2 className="text-2xl font-semibold text-slate-800 mb-6">
+            Create Account
+          </h2>
 
-        {/* Registration Form */}
-        <form onSubmit={handleSubmit} className="auth-form">
+          {/* Error */}
+          {error && (
+            <div className="mb-5 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-600">
+              {error}
+            </div>
+          )}
 
-          {/* Full Name */}
-          <label>
-            Full Name
+          <form onSubmit={handleSubmit} className="space-y-5">
 
-            <div className="input-wrapper">
-              <span className="input-icon">♙</span>
+            {/* Full Name */}
+            <div>
+              <label
+                htmlFor="name"
+                className="block text-sm font-medium text-slate-700 mb-2"
+              >
+                Full Name
+              </label>
 
               <input
-                type="text"
+                id="name"
                 name="name"
+                type="text"
+                value={formData.name}
+                onChange={handleChange}
                 placeholder="Enter your full name"
-                value={form.name}
-                onChange={handleChange}
                 required
+                className="w-full rounded-lg border border-slate-300 px-4 py-3 text-slate-800 outline-none transition focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100"
               />
             </div>
-          </label>
 
-          {/* Email */}
-          <label>
-            Email Address
-
-            <div className="input-wrapper">
-              <span className="input-icon">✉</span>
+            {/* Email */}
+            <div>
+              <label
+                htmlFor="email"
+                className="block text-sm font-medium text-slate-700 mb-2"
+              >
+                Email Address
+              </label>
 
               <input
-                type="email"
+                id="email"
                 name="email"
-                placeholder="Enter your email address"
-                value={form.email}
+                type="email"
+                value={formData.email}
                 onChange={handleChange}
+                placeholder="Enter your email"
                 required
+                className="w-full rounded-lg border border-slate-300 px-4 py-3 text-slate-800 outline-none transition focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100"
               />
             </div>
-          </label>
 
-          {/* Phone */}
-          <label>
-            Phone Number
-
-            <div className="input-wrapper">
-              <span className="input-icon">⌕</span>
-
-              <input
-                type="tel"
-                name="phone"
-                placeholder="Enter your phone number"
-                value={form.phone}
-                onChange={handleChange}
-              />
-            </div>
-          </label>
-
-          {/* Password */}
-          <label>
-            Password
-
-            <div className="input-wrapper">
-              <span className="input-icon">♙</span>
+            {/* Password */}
+            <div>
+              <label
+                htmlFor="password"
+                className="block text-sm font-medium text-slate-700 mb-2"
+              >
+                Password
+              </label>
 
               <input
-                type={showPassword ? 'text' : 'password'}
+                id="password"
                 name="password"
-                placeholder="Create a password"
-                value={form.password}
+                type="password"
+                value={formData.password}
                 onChange={handleChange}
+                placeholder="Create a password"
                 required
                 minLength={8}
+                className="w-full rounded-lg border border-slate-300 px-4 py-3 text-slate-800 outline-none transition focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100"
               />
-
-              <button
-                type="button"
-                className="password-toggle"
-                onClick={() =>
-                  setShowPassword(!showPassword)
-                }
-              >
-                {showPassword ? '◉' : '◌'}
-              </button>
             </div>
-          </label>
 
-          {/* Confirm Password */}
-          <label>
-            Confirm Password
-
-            <div className="input-wrapper">
-              <span className="input-icon">♙</span>
+            {/* Confirm Password */}
+            <div>
+              <label
+                htmlFor="password_confirmation"
+                className="block text-sm font-medium text-slate-700 mb-2"
+              >
+                Confirm Password
+              </label>
 
               <input
-                type={showConfirmPassword ? 'text' : 'password'}
+                id="password_confirmation"
                 name="password_confirmation"
-                placeholder="Confirm your password"
-                value={form.password_confirmation}
+                type="password"
+                value={formData.password_confirmation}
                 onChange={handleChange}
+                placeholder="Confirm your password"
                 required
                 minLength={8}
+                className="w-full rounded-lg border border-slate-300 px-4 py-3 text-slate-800 outline-none transition focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100"
               />
-
-              <button
-                type="button"
-                className="password-toggle"
-                onClick={() =>
-                  setShowConfirmPassword(!showConfirmPassword)
-                }
-              >
-                {showConfirmPassword ? '◉' : '◌'}
-              </button>
             </div>
-          </label>
 
-          {/* Submit */}
-          <button
-            type="submit"
-            className="primary-button"
-            disabled={loading}
-          >
-            {loading
-              ? 'Creating Account...'
-              : 'Create Account'}
-          </button>
+            {/* Account Information */}
+            <div className="rounded-lg bg-slate-50 border border-slate-200 px-4 py-3">
+              <p className="text-sm text-slate-600">
+                Public registration is available for{" "}
+                <span className="font-semibold text-slate-800">
+                  Tenants
+                </span>
+                .
+              </p>
+            </div>
 
-        </form>
+            {/* Submit Button */}
+            <button
+              type="submit"
+              disabled={loading}
+              className="w-full rounded-lg bg-indigo-600 px-4 py-3 font-semibold text-white transition hover:bg-indigo-700 disabled:cursor-not-allowed disabled:opacity-60"
+            >
+              {loading ? "Creating account..." : "Create Tenant Account"}
+            </button>
+          </form>
 
-        {/* Login Link */}
-        <div className="auth-footer">
-          Already have an account?
-
-          <Link to="/login">
-            Sign in
-          </Link>
+          {/* Login Link */}
+          <p className="mt-6 text-center text-sm text-slate-500">
+            Already have an account?{" "}
+            <Link
+              to="/login"
+              className="font-semibold text-indigo-600 hover:text-indigo-700"
+            >
+              Sign in
+            </Link>
+          </p>
         </div>
-
       </div>
     </div>
-  )
+  );
 }
-
-export default Register

@@ -1,238 +1,139 @@
-import { useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
-import { useAuth } from '../../auth/AuthContext'
+import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { useAuth } from "../../auth/AuthContext";
 
-function Login() {
-  const navigate = useNavigate()
-  const { login } = useAuth()
+export default function Login() {
+  const { login } = useAuth();
+  const navigate = useNavigate();
 
-  const [form, setForm] = useState({
-    email: '',
-    password: '',
-  })
+  const [formData, setFormData] = useState({
+    email: "",
+    password: "",
+  });
 
-  const [showPassword, setShowPassword] = useState(false)
-  const [rememberMe, setRememberMe] = useState(false)
-  const [error, setError] = useState('')
-  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
-  const handleChange = (event) => {
-    setForm({
-      ...form,
-      [event.target.name]: event.target.value,
-    })
-  }
+  const handleChange = (e) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value,
+    });
+  };
 
-  const handleSubmit = async (event) => {
-    event.preventDefault()
-
-    setError('')
-    setLoading(true)
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setError("");
+    setLoading(true);
 
     try {
-      await login(
-        form.email,
-        form.password
-      )
-
-      navigate('/dashboard', { replace: true })
+      await login(formData.email, formData.password);
+      navigate("/");
     } catch (err) {
-      const firstError = err.errors
-        ? Object.values(err.errors)[0]?.[0]
-        : err.message
-
       setError(
-        firstError || 'Unable to sign in. Please check your credentials.'
-      )
+        err.response?.data?.message ||
+          err.message ||
+          "Invalid email or password."
+      );
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
   return (
-    <div className="auth-page">
-      <div className="auth-background" />
+    <div className="min-h-screen bg-slate-100 flex items-center justify-center px-4">
+      <div className="w-full max-w-md">
 
-      <div className="auth-card login-card">
+        {/* Logo / Brand */}
+        <div className="text-center mb-8">
+          <h1 className="text-3xl font-bold text-indigo-600">
+             Property Management Software
+          </h1>
 
-        {/* Logo */}
-        <div className="brand">
-          <div className="brand-logo">
-            <span>⌂</span>
-          </div>
-
-          <div className="brand-name">
-            Property Management
-          </div>
-
-          <div className="brand-subtitle">
-            Software
-          </div>
-        </div>
-
-        {/* Heading */}
-        <div className="auth-heading">
-          <h1>Welcome Back</h1>
-
-          <p>
-            Sign in to continue to your account.
+          <p className="mt-2 text-slate-500">
+            Welcome back! Please sign in to your account.
           </p>
         </div>
 
-        {/* Error */}
-        {error && (
-          <div className="auth-error">
-            {error}
-          </div>
-        )}
+        {/* Login Card */}
+        <div className="bg-white rounded-2xl shadow-lg p-8">
+          <h2 className="text-2xl font-semibold text-slate-800 mb-6">
+            Sign In
+          </h2>
 
-        {/* Login Form */}
-        <form
-          onSubmit={handleSubmit}
-          className="auth-form"
-        >
-
-          {/* Email */}
-          <label>
-            Email Address
-
-            <div className="input-wrapper">
-              <span className="input-icon">
-                ✉
-              </span>
-
-              <input
-                type="email"
-                name="email"
-                placeholder="Enter your email address"
-                value={form.email}
-                onChange={handleChange}
-                required
-              />
+          {error && (
+            <div className="mb-5 rounded-lg bg-red-50 border border-red-200 px-4 py-3 text-sm text-red-600">
+              {error}
             </div>
-          </label>
+          )}
 
-          {/* Password */}
-          <label>
-            Password
+          <form onSubmit={handleSubmit} className="space-y-5">
 
-            <div className="input-wrapper">
-              <span className="input-icon">
-                🔒
-              </span>
-
-              <input
-                type={
-                  showPassword
-                    ? 'text'
-                    : 'password'
-                }
-                name="password"
-                placeholder="Enter your password"
-                value={form.password}
-                onChange={handleChange}
-                required
-              />
-
-              <button
-                type="button"
-                className="password-toggle"
-                onClick={() =>
-                  setShowPassword(!showPassword)
-                }
-                aria-label={
-                  showPassword
-                    ? 'Hide password'
-                    : 'Show password'
-                }
+            {/* Email */}
+            <div>
+              <label
+                htmlFor="email"
+                className="block text-sm font-medium text-slate-700 mb-2"
               >
-                {showPassword ? '◉' : '◌'}
-              </button>
-            </div>
-          </label>
+                Email Address
+              </label>
 
-          {/* Remember + Forgot */}
-          <div className="login-options">
-
-            <label className="remember-option">
               <input
-                type="checkbox"
-                checked={rememberMe}
-                onChange={(event) =>
-                  setRememberMe(event.target.checked)
-                }
+                id="email"
+                name="email"
+                type="email"
+                value={formData.email}
+                onChange={handleChange}
+                placeholder="Enter your email"
+                required
+                className="w-full rounded-lg border border-slate-300 px-4 py-3 text-slate-800 outline-none transition focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100"
               />
+            </div>
 
-              <span>
-                Remember me
-              </span>
-            </label>
+            {/* Password */}
+            <div>
+              <label
+                htmlFor="password"
+                className="block text-sm font-medium text-slate-700 mb-2"
+              >
+                Password
+              </label>
 
+              <input
+                id="password"
+                name="password"
+                type="password"
+                value={formData.password}
+                onChange={handleChange}
+                placeholder="Enter your password"
+                required
+                className="w-full rounded-lg border border-slate-300 px-4 py-3 text-slate-800 outline-none transition focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100"
+              />
+            </div>
+
+            {/* Submit Button */}
             <button
-              type="button"
-              className="forgot-password"
-              onClick={() => {
-                setError(
-                  'Password reset is not available yet.'
-                )
-              }}
+              type="submit"
+              disabled={loading}
+              className="w-full rounded-lg bg-indigo-600 px-4 py-3 font-semibold text-white transition hover:bg-indigo-700 disabled:cursor-not-allowed disabled:opacity-60"
             >
-              Forgot password?
+              {loading ? "Signing in..." : "Sign In"}
             </button>
 
-          </div>
+          </form>
 
-          {/* Sign In */}
-          <button
-            type="submit"
-            className="primary-button"
-            disabled={loading}
-          >
-            {loading
-              ? 'Signing In...'
-              : 'Sign In'}
-          </button>
-
-        </form>
-
-        {/* Divider */}
-        <div className="auth-divider">
-          <span />
-          <p>or</p>
-          <span />
+          {/* Register Link */}
+          <p className="mt-6 text-center text-sm text-slate-500">
+            Don't have an account?{" "}
+            <Link
+              to="/register"
+              className="font-semibold text-indigo-600 hover:text-indigo-700"
+            >
+              Create an account
+            </Link>
+          </p>
         </div>
-
-        {/* Google */}
-        <button
-          type="button"
-          className="google-button"
-          onClick={() => {
-            setError(
-              'Google sign-in is not available yet.'
-            )
-          }}
-        >
-          <span className="google-icon">
-            G
-          </span>
-
-          <span>
-            Sign in with Google
-          </span>
-        </button>
-
-        {/* Register */}
-        <div className="auth-footer">
-          Don't have an account?
-
-          <Link to="/register">
-            Register
-          </Link>
-        </div>
-
       </div>
     </div>
-  )
+  );
 }
-
-export default Login
