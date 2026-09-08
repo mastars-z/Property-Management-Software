@@ -67,3 +67,10 @@ class TenantPolicy
         return false;
     }
 }
+     * Determine whether the user has tenant privileges.
+     */
+    public function access(User $user): bool
+    {
+        return $user->role === 'tenant';
+    }
+}
