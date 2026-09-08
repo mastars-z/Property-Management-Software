@@ -24,7 +24,7 @@ class TenantPolicy
         if (in_array($user->role, ['administrator', 'property_owner', 'property_manager'])){
             return true;
         }
-        return $user->role === 'tenant' && $tenant->user_id === $user_id;
+        return $user->role === 'tenant' && $tenant->user_id === $user->id;
     }
 
     /**
