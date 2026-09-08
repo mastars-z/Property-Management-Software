@@ -2,9 +2,13 @@
 
 use App\Http\Controllers\AuthController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\MaintenanceRequestController;
+use App\Http\Controllers\DiscussionCaseController;
 
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
+Route::apiResource('maintenance-requests', MaintenanceRequestController::class);
+Route::apiResource('discussion-cases', DiscussionCaseController::class);
 
 Route::middleware('auth:sanctum')->group(function () {
 

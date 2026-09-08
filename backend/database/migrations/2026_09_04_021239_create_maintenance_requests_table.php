@@ -11,8 +11,7 @@ return new class extends Migration
         Schema::create('maintenance_requests', function (Blueprint $table) {
             $table->id();
 
-            $table->foreignId('unit_id')
-                ->constrained('units');
+            $table->unsignedBigInteger('unit_id');
 
             $table->string('title');
             $table->text('description');

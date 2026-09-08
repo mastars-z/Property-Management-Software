@@ -11,8 +11,7 @@ return new class extends Migration
         Schema::create('discussion_cases', function (Blueprint $table) {
             $table->id();
 
-            $table->foreignId('lease_id')
-                ->constrained('leases');
+            $table->unsignedBigInteger('lease_id');
 
             $table->string('topic');
             $table->text('description');
