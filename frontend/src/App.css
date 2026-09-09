@@ -877,3 +877,22 @@ td {
     font-size: 12px;
   }
 }
+.logout-button {
+  width: calc(100% - 20px);
+  margin: 8px 10px 0;
+  padding: 9px 12px;
+
+  border: 1px solid #29395c;
+  border-radius: 7px;
+
+  background: transparent;
+  color: #aeb8ce;
+
+  cursor: pointer;
+  font-size: 11px;
+}
+
+.logout-button:hover {
+  background: #17284d;
+  color: white;
+}
