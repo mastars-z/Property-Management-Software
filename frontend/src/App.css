@@ -996,3 +996,209 @@ td {
     font-size: 11px;
   }
 }
+/* ================= TENANT DASHBOARD ================= */
+
+.tenant-main-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 24px;
+  margin-bottom: 24px;
+}
+
+.tenant-lease-card {
+  min-height: 260px;
+}
+
+.lease-property {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin: 20px 0 25px;
+}
+
+.lease-property-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #f1edff;
+  color: #6d5dfc;
+  font-size: 24px;
+}
+
+.lease-property div:last-child {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.lease-property div:last-child span {
+  color: #7c8497;
+  font-size: 13px;
+}
+
+.lease-details {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+}
+
+.lease-details > div {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.lease-details span {
+  color: #8b93a7;
+  font-size: 12px;
+}
+
+.lease-details strong {
+  font-size: 14px;
+}
+
+.tenant-active-status {
+  color: #20a464;
+}
+
+.tenant-payment-card {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+}
+
+.payment-label {
+  font-size: 13px;
+  color: #7c8497;
+  margin-bottom: 8px;
+}
+
+.payment-amount {
+  font-size: 30px;
+  margin-bottom: 5px;
+}
+
+.payment-date {
+  font-size: 13px;
+  color: #e05a5a;
+  margin-bottom: 22px;
+}
+
+.chapa-button {
+  width: 100%;
+  border: none;
+  border-radius: 10px;
+  padding: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  background: #20a464;
+  color: white;
+  margin-bottom: 10px;
+}
+
+.chapa-button:hover {
+  opacity: 0.9;
+}
+
+.payment-history-button {
+  width: 100%;
+  border: 1px solid #e1e5ee;
+  background: white;
+  border-radius: 10px;
+  padding: 12px;
+  cursor: pointer;
+}
+
+.tenant-quick-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+  margin-top: 15px;
+}
+
+.tenant-quick-grid button {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  text-align: left;
+  padding: 17px;
+  border-radius: 12px;
+  border: 1px solid #e5e8ef;
+  background: white;
+  cursor: pointer;
+}
+
+.tenant-quick-grid button:hover {
+  background: #f8f7ff;
+  border-color: #cfc8ff;
+}
+
+.tenant-quick-grid button div {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.tenant-quick-grid small {
+  color: #8b93a7;
+}
+
+.tenant-quick-icon {
+  font-size: 22px;
+}
+
+.tenant-property-info {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  margin-top: 15px;
+}
+
+.tenant-property-info > div {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  border-bottom: 1px solid #edf0f5;
+  padding-bottom: 12px;
+}
+
+.tenant-property-info span {
+  color: #8b93a7;
+}
+
+.tenant-activity-card {
+  margin-top: 24px;
+}
+
+@media (max-width: 1000px) {
+  .tenant-main-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .lease-details {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 600px) {
+  .lease-details {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .tenant-quick-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .payment-amount {
+    font-size: 26px;
+  }
+
+  .tenant-property-info > div {
+    flex-direction: column;
+    gap: 5px;
+  }
+}
