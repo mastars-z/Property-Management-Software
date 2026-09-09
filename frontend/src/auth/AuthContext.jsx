@@ -6,9 +6,11 @@ const API_URL = 'http://localhost:8000/api'
 
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(null)
+
   const [token, setToken] = useState(
     () => localStorage.getItem('auth_token')
   )
+
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
@@ -37,6 +39,7 @@ export function AuthProvider({ children }) {
         setUser(data.user)
       } catch (error) {
         console.error('Authentication check failed:', error)
+
         localStorage.removeItem('auth_token')
         setToken(null)
         setUser(null)
@@ -48,6 +51,7 @@ export function AuthProvider({ children }) {
     fetchUser()
   }, [token])
 
+  // LOGIN
   const login = async (email, password) => {
     const response = await fetch(`${API_URL}/login`, {
       method: 'POST',
@@ -64,19 +68,62 @@ export function AuthProvider({ children }) {
     const data = await response.json()
 
     if (!response.ok) {
-      const error = new Error(data.message || 'Login failed.')
+      const error = new Error(
+        data.message || 'Login failed.'
+      )
+
       error.status = response.status
       error.errors = data.errors
+
       throw error
     }
 
     localStorage.setItem('auth_token', data.token)
+
     setToken(data.token)
     setUser(data.user)
 
     return data.user
   }
 
+  // REGISTER
+  const register = async (formData) => {
+  const response = await fetch(`${API_URL}/register`, {
+    method: "POST",
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      name: formData.name,
+      email: formData.email,
+      password: formData.password,
+      password_confirmation: formData.password_confirmation,
+    }),
+  });
+
+  const data = await response.json();
+
+  if (!response.ok) {
+    const error = new Error(
+      data.message || "Registration failed."
+    );
+
+    error.status = response.status;
+    error.errors = data.errors;
+
+    throw error;
+  }
+
+  localStorage.setItem("auth_token", data.token);
+
+  setToken(data.token);
+  setUser(data.user);
+
+  return data.user;
+};
+
+  // LOGOUT
   const logout = async () => {
     if (!token) {
       setUser(null)
@@ -107,6 +154,7 @@ export function AuthProvider({ children }) {
         token,
         loading,
         login,
+        register,
         logout,
         isAuthenticated: Boolean(user && token),
       }}
