@@ -28,9 +28,12 @@ class AuthController extends Controller
         $token = $user->createToken('auth-token')->plainTextToken;
 
         return response()->json([
+            'success' => true,
             'message' => 'Registration successful',
-            'user' => $user,
-            'token' => $token,
+            'data' => [
+                'user' => $user,
+                'token' => $token,
+            ]
         ], 201);
     }
 
@@ -44,31 +47,44 @@ class AuthController extends Controller
         $user = User::where('email', $validated['email'])->first();
 
         if (!$user || !Hash::check($validated['password'], $user->password)) {
-            throw ValidationException::withMessages([
-                'email' => ['The provided credentials are incorrect.'],
-            ]);
+            return response()->json([
+                'success' => false,
+                'message' => 'Validation failed',
+                'errors' => ['email' => ['The provided credentials are incorrect.']],
+                'data' => null
+            ], 422);
         }
 
         if ($user->status !== 'active') {
             return response()->json([
-                'message' => 'Your account is not active.',
+                'success' => false,
+                'message' => 'Forbidden',
+                'errors' => ['status' => ['Your account is not active.']],
+                'data' => null
             ], 403);
         }
 
         $token = $user->createToken('auth-token')->plainTextToken;
 
         return response()->json([
+            'success' => true,
             'message' => 'Login successful',
-            'user' => $user,
-            'token' => $token,
-        ]);
+            'data' => [
+                'user' => $user,
+                'token' => $token,
+            ]
+        ], 200);
     }
 
     public function me(Request $request)
     {
         return response()->json([
-            'user' => $request->user(),
-        ]);
+            'success' => true,
+            'message' => 'User retrieved successfully',
+            'data' => [
+                'user' => $request->user(),
+            ]
+        ], 200);
     }
 
     public function logout(Request $request)
@@ -76,7 +92,9 @@ class AuthController extends Controller
         $request->user()->currentAccessToken()->delete();
 
         return response()->json([
+            'success' => true,
             'message' => 'Logout successful',
-        ]);
+            'data' => (object)[]
+        ], 200);
     }
 }
