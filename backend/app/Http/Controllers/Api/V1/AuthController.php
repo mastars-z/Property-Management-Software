@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Api\V1;
 
+use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -80,9 +81,9 @@ class AuthController extends Controller
     {
         return response()->json([
             'success' => true,
-            'message' => 'User retrieved successfully',
+            'message' => 'User profile retrieved successfully',
             'data' => [
-                'user' => $request->user(),
+                'user' => $request->user()
             ]
         ], 200);
     }
@@ -93,8 +94,8 @@ class AuthController extends Controller
 
         return response()->json([
             'success' => true,
-            'message' => 'Logout successful',
-            'data' => (object)[]
+            'message' => 'Logged out successfully',
+            'data' => null
         ], 200);
     }
 }
